@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "[Reactor3 Reference Guide] 3. Reactive Programming의 소개"
+title:  "[Reactor3 Reference Guide] 3. Reactive Programming의 소개(1)"
 date:   2018-05-10 00:02:05 +0900
 categories: Reactor
 ---
