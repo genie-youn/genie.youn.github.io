@@ -2,7 +2,7 @@
 layout: post
 title:  "[Reactor3 Reference Guide] 3. Reactive Programming의 소개(1)"
 date:   2018-05-10 00:02:05 +0900
-categories: Reactor
+tag: Reactor
 ---
 
 원문 : [https://projectreactor.io/docs/core/release/reference/docs/index.html#intro-reactive](https://projectreactor.io/docs/core/release/reference/docs/index.html#intro-reactive)

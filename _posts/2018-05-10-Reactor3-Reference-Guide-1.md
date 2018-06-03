@@ -2,7 +2,7 @@
 layout: post
 title:  "[Reactor3 Reference Guide] 2. Getting Start"
 date:   2018-05-10 01:02:05 +0900
-categories: Reactor
+tag: Reactor
 ---
 
 원문 : [https://projectreactor.io/docs/core/release/reference/docs/index.html#about-doc](https://projectreactor.io/docs/core/release/reference/docs/index.html#about-doc)

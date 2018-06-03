@@ -10,6 +10,12 @@ layout: default
     {{ content }}
   </div>
 
+  <script src="https://utteranc.es/client.js"
+        repo="genie-youn/genie-youn.github.io"
+        issue-term="pathname"
+        async>
+  </script>
+
   <footer class="post-footer">
     <div class="post-meta">
       {% if page.date %} <time datetime="{{ page.date | date_to_xmlschema }}" itemprop="datePublished">{{ page.date | date: "%b %-d, %Y" }}</time> {% endif %}
@@ -28,4 +34,5 @@ layout: default
   {% if jekyll.environment == 'production' and site.disqus_shortname and page.comments != false %}
   {% include disqus.html %}
   {% endif %}
+
 </article>
