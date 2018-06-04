@@ -48,3 +48,8 @@ Reactive Streams Specification에 정의된 실제 메커니즘은 유추에 가
 ### 3.3.6 Hot vs Cold
 
 리액티브 라이브러에서는 리액티브 시퀀스를 `hot` 과 `cold` 두가지로 구분하낟. 이러한 구분은 리액티브 스트림이 `Subscriber`에게 어떻게 반응하는지와 주로 관계가 있다.
+데이터 소스를 포함하여 `Cold Sequence`는 각각의 Subscriber에 대해 새로 시작된다. 만약 소스가 HTTP 요청으로 감싸져 있다면 각각의 구독자에 대하여 새로운 HTTP 요청이 생성된다.
+
+`Hot Sequence`는 각각의 구독자에 대하여 아무것도 없는 상태부텉 시작하지 않는다. 오히려 이후의 구독자들은 그들이 구독된 이후에 방출되는 신호를 받는다. 그러나 일부의 `Hot Sequence`들은 방출의 전체나 일부 히스토리를 캐시해두거나 반복할 수 있다.
+
+일반적인 관점에서 `Hot Sequence`는 구독하는 Subscriber가 없을지라도 방출할 수 있다. ("Noting happens before you subscribe" 조건의 예외이다.)
