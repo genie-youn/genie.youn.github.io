@@ -44,38 +44,63 @@ Organazation / Process
 
 그뒤로는 Pivotal이 위에것들을 도와줄 수 있다.. 하는 영업
 
-세션3. 넷플릭스 MSA와 피보탈
-    클라우네이티브자바 - 조쉬롱
-    카프카 데이터플랫폼의 최강자
+세션3. 넷플릭스 서비스와 피보탈
+클라우드 네이티브한 MSA를 가져가기 위해서 아래 책들은 좋은 레퍼런스가 될것이다.
+```
+클라우네이티브자바 - 조쉬롱
+카프카 데이터플랫폼의 최강자
+```
 
-    넷플릭스 OSS
-    configuration server - Archalus
-    service discovery - Eureka
-    circuit breaker - Hysrix
-    api gateway - zuul
-    load balacer - ribobn
-    realtime monitoring - atlas / servo / spectator
-    distributed tracing -
-    zero downtime delivery - (CI/CD)spinnaker (canary)kayenta
-    fault injection
-    simain army
-    evcache
-    side car pattern
+넷플릭스가 왜 기존의 거대한 monolithic 시스템을 MSA로 바꾸었는지에 대한 이야기. 다른 자료도 많지만 [이 글](https://media.netflix.com/ko/company-blog/completing-the-netflix-cloud-migration)을 보자
 
-    유투브 혼돈의제왕을 검색해보래
+이렇게 MSA로 바꿔나가면서 넷플릭스는 MSA에 꼭 필요하다고 생각되는 컴포넌트들을 오픈소스화 하여 MSA 진영을 이끄는데 기여하고 있다.
+각각의 마이크로서비스가 뜰 때 설정 정보를 주입해주는
+configuration server - [archalus](https://github.com/Netflix/archaius)
 
-세션4. 스프링프로젝트와 피보탈 파운더리
-피보탈 application service에 관한 세션이다.
+어떤 마이크로서비스가 어디에(어떤 ip/호스트로) 떠있는지 알려주는 전화번호부
+service discovery(registry) - [eureka](https://github.com/Netflix/eureka)
 
-세션4. 구글 클라우드 플랫폼
-PCF 가 GCP를 워크로드로 쓸꺼다. GCP이 최고다
+장애가 생겼을 때 장애를 고립시켜 다른 마이크로 서비스에 영향을 주지 않게 돕는 누전차단기
+circuit breaker - [Hysrix](https://github.com/Netflix/Hystrix)
 
-세션5. Cloud Native Enterprise
-USA airforce pivotal
+Zuul is a gateway service that provides dynamic routing, monitoring, resiliency, security, and more.
+api gateway - [zuul](https://github.com/Netflix/zuul)
 
-Optimizing time to value
+Ribbon is a Inter Process Communication (remote procedure calls) library with built in software load balancers. The primary usage model involves REST calls with various serialization scheme support.
+load balacer - [ribobn](https://github.com/Netflix/ribbon)
 
-금융권 -> 기간계 코어뱅킹 시스템이 이럴 필요가 있을까?
-그런데 대고객 서비스는 달라.
+모니터링 도구
+realtime monitoring - [atlas](https://github.com/Netflix/atlas) / [spectator](https://github.com/Netflix/spectator)
 
-한 이터러블이 끝날때 피쳐가 동작하고 피드백을 받을 수 있어야 해
+빌드 / 배포도구
+zero downtime delivery - (CI/CD)[spinnaker](https://www.spinnaker.io/) (canary)kayenta
+
+fault injection
+
+랜덤하게 인스턴스나 DB를 죽이고 다니는 카오스 몽키 - 이 인스턴스가 죽으면 어떤 영향이 생기지?
+[chaos monkey](https://github.com/Netflix/chaosmonkey)
+
+클라우드를 위한 분산 메모리 캐시
+[evcache](https://github.com/Netflix/EVCache)
+
+기타 등등 많은데 유투브에 `넷플릭스 혼돈의제왕`을 검색해보면 좀 더 자세한 설명을 볼 수 있다.
+
+세션4. Spring Project와 Pivotal Cloud Foundry의 최신 업데이트
+PCF에 대한 간략한 소개. 스프링 부트로 마이크로 서비스를 만들면 PCF에서 제공하는 cli로 이걸 배포하고, 모니터링하고 위에 넷플릭스가 만든 OSS들을
+스프링 환경에서 쉽게 사용할 수 있도록 준비해두었다. actuator라던지..
+
+세션5. Google Cloud Platform을 통한 Pivotal Cloud Foundry의 확장
+PCF 가 GCP를 워크로드로 쓸꺼다. GCP이 최고다.
+
+세션6. 클라우드 네이티브 엔터프라이즈 사례 발표 (Case studies)
+기존의 많은 IT와 거리가 먼 엔터프라이즈들, 거대 금융회사나 포드같은 자동차 제조사들이 IT를 내제화 하는데 관심을 갖고 있고 Pivotal을 이에 컨설팅을 제공한다.
+그들이 devOps 개발팀을 가질 수 있도록 페어로 붙어서 함께 일하고 그들이 가진 monolithic한 시스템중 가장 코어한 부분을 마이크로 서비스로 분리해내는 일을 함께 하며
+노하우를 축적한 쿡북을 만든다.
+
+USA airforce pivotal로 검색하면 좀 더 자세한 사례를 볼 수 있다.
+중요한건 한 이터러블이 끝날때 피쳐가 동작하고 피드백을 받을 수 있어야 한다는것.
+
+후기.
+
+사실 좀 더 기술적인 이야기를 할 줄 알았는데, 이 점에 좀 실망했다. 하지만 적어도 Spring이, 그리고 Spring을 이끄는 Pivotal이 옳다고 생각하는 방향에서 Cloud Native와 MSA는
+빼놓을 수 없는 키워드인것 같다. 분명 매력적이다.
