@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Should that be a Microservice? Keep These Six Factors in Mind"
-date: 2018-06-05 00:02:05 +0900
+date: 2018-06-09 00:02:05 +0900
 tag: Article
 ---
 
@@ -21,3 +21,19 @@ Matt Stine와 나는 요즘 고객들의 어플리케이션을 보면서 시간�
 
 시스템의 일부가 다른 속도로 발전하거나, 다른 방향으로 발전해야 하는가? 그렇다면 그 부분을 마이크로 서비스로 변경해라. 마이크로 서비스는 각각의 컴포넌트들이 독립적인 라이프 사이클을 가지게 할 수 있다.
 어떤 시스템에도 일부 모듈은 거의 변하지 않고, 다른 모듈은 매번 변경되는것처럼 보인다. 예를들면 온라인 쇼핑몰 앱을 예로 들어보자.
+
+![image1](https://content.cdntwrk.com/files/aHViPTYzOTc1JmNtZD1pdGVtZWRpdG9yaW1hZ2UmZmlsZW5hbWU9aXRlbWVkaXRvcmltYWdlXzVhNjEzZDRiOGU1ZGMucG5nJnZlcnNpb249MDAwMCZzaWc9MWY0NTVkZmIzOWY3N2E3YTQ5MzhiN2YwYWQxNmI2YzQ%253D)
+
+카트와 인벤토리 기능은 일상적인 자주 변경되지 않을 수 있다. 하지만 우리는 끊임없이 추천 엔진을 실험하고 있을 것이다. 또한 검색 기능을 부지런히 개선하고자 한다. 이 두 모듈을 마이크로서비스로 나누면 각 개발팀이 더 빠른 속도로 개발 사이클을 수행하여 비즈니스 가치를 신속하게 제공 할 수 있다.
+
+![image2](https://content.cdntwrk.com/files/aHViPTYzOTc1JmNtZD1pdGVtZWRpdG9yaW1hZ2UmZmlsZW5hbWU9aXRlbWVkaXRvcmltYWdlXzVhNjEzZDcxMTcxMWQucG5nJnZlcnNpb249MDAwMCZzaWc9MDA0NGNjYWFhMTU1Yzc4NDBhMGY3YzNjNzI5NDM1YmE%253D)
+
+### 2. 독립적인 라이프사이클
+
+모듈이 완전히 독립적인 라이프 사이클(코드를 커밋하는 순간부터 프로덕트에 반영되기 까지의 흐름)을 가져야 하는 경우에는 마이크로서비스여야 한다. 이를위해 자체 코드 저장소와, CI/CD 파이프라인등을 갖추고 있어야 한다. 범위가 작으면 마이크로 서비스를 테스트 하는 것이 훨씬 쉬워진다. 나는 80시간에 이르는 회귀 테스트를 가진 프로젝트를 기억한다. 말할 필요도 없이 우리는 필요하지만, 그 테스트를 자주 수행하지 않았다. 마이크로서비스는 작은 규모의 회귀 테스트를 가능케 한다. 이렇게 하면 수없이 많은 시간을 절약할수 있고, 더 빨리 이슈를 깨나갈 것이다. 마이크로서비스를 도입해야 할 이유가 테스트에만 있는것은 아니다. 어떤 경우에는 비즈니스 요구사항이 마이크로 서비스 아키텍처로 우리를 이끌 수 있다. 아까 언급했던 쇼핑몰 Widget.io 를 보자.
+
+우리의 비즈니스 리더쉽은 새로운 기회를 포작했을 수 있고, 이때는 빠르게 시장을 점유하는것이 가장 중요하다. 우리가 새로운 기능을 기존의 monolithic 한 서비스에 추가하기로 결정한다면 너무 오래 걸릴것이다. 그렇다는것은 곧 우리는 비즈니스가 요구하는대로 반응할 수 없다는 것을 의미한다.
+
+그러나 독립적인 마이크로서비스로서 프로젝트X는 자체 배포 파이프라인을 가질 수 있다. 이 접근법을 통해 우리는 신속하게 개발 사이클을 반복하고, 새로운 비즈니스 기회를 활용할 수 있다.
+
+![image3](https://content.cdntwrk.com/files/aHViPTYzOTc1JmNtZD1pdGVtZWRpdG9yaW1hZ2UmZmlsZW5hbWU9aXRlbWVkaXRvcmltYWdlXzVhNjEzZDhjOGMwMDkucG5nJnZlcnNpb249MDAwMCZzaWc9MjMzNzk3ZDQ0ZWMxMDAzMmZlMDgwZGY3YjZlM2E1OTI%253D)
