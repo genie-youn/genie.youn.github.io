@@ -15,4 +15,6 @@ tag: Reactor
 
 작업의 관계 수를 변경하는 연산자는 타입 또한 변경한다. 예를들어 `Flux`의 `count`연산자는 `Mono<Long>`을 반환한다.
 
-## 4.1 
+### 4.1 0-N개 요소의 비동기 시퀀스 Flux
+
+`Flux<T>`는 0부터 N개의 방출된 요소의 비동기 시퀀스를 나타내고, 완료 신호와 에러로 인해 종료될 수 있는 표준 `Publisher<T>` 이다. 그러므로, `Flux`가 가질 수 있는 값은 값과 완료신호와 에러이다. Reactive Streams 스펙에서 이러한 세가지 신호의 타입은 downstream 객체의 `onNext`, `onComplete`, `onError`를 호출한다.
