@@ -37,3 +37,20 @@ Matt Stine와 나는 요즘 고객들의 어플리케이션을 보면서 시간�
 그러나 독립적인 마이크로서비스로서 프로젝트X는 자체 배포 파이프라인을 가질 수 있다. 이 접근법을 통해 우리는 신속하게 개발 사이클을 반복하고, 새로운 비즈니스 기회를 활용할 수 있다.
 
 ![image3](https://content.cdntwrk.com/files/aHViPTYzOTc1JmNtZD1pdGVtZWRpdG9yaW1hZ2UmZmlsZW5hbWU9aXRlbWVkaXRvcmltYWdlXzVhNjEzZDhjOGMwMDkucG5nJnZlcnNpb249MDAwMCZzaWc9MjMzNzk3ZDQ0ZWMxMDAzMmZlMDgwZGY3YjZlM2E1OTI%253D)
+
+### 3. 독립적인 확장성(Scalability)
+
+시스템의 일부분이 부하나 처리량이 다를 경우, 스케일링에 있어 요구사항이 다를 수 있는데 이 부분을 마이크로 서비스로 분리하여 해결할 수 있다.
+
+일반적인 아키텍처에서도 모듈간 다른 스케일링을 요구하는 경우는 빈번하다. 앞서 예로 들었던 쇼핑몰 Widget.io 를 보자.
+회계 관리 기능에 가해지는 부하는 주문 처리 기능에 비하면 몹시 적다. 과거에는 이런 주문 처리 기능처럼 몰리는 모듈을 위해 전체 어플리케이션을 확장해야만 했다. 이러한 방법은 인프라 비용을 증가시키는 결과를 낳는다. 앱의 일부 부하가 몰리는 부분으로 인해 그렇지 않은 부분까지 확장해야 하기 때문이다.
+
+만약 주문 처리 기능을 마이크로 서비스로 리팩토링한다면 필요에 따라 다음과 가이 확장할 수 있게 된다.
+![image3](https://content.cdntwrk.com/files/aHViPTYzOTc1JmNtZD1pdGVtZWRpdG9yaW1hZ2UmZmlsZW5hbWU9aXRlbWVkaXRvcmltYWdlXzVhNjEzZGEwYTg1MjcucG5nJnZlcnNpb249MDAwMCZzaWc9MzkyOWE1ZGM2OWZlMjA3MWE5NmQ4YTJjOWE3ZTdiZjM%253D)
+
+### 4. 장애의 고립
+
+때로는 특정 타입의 장애로부터 앱을 격리시키고자 한다. 예를들어 의존하고 있는 외부 서비스가 가용성 목표를 충족하지 못할 때 어떤 일이 발생될까? 우리는 그 의존성을 나머지 시스템들과 분리하기 위해 마이크로 서비스를 만들어 그 서비스에 적절한 페일오버 메커니즘을 구축 할 수 있다
+
+다시한번 Widget.io 로 돌아가면, 재고 기능은 레거시인 창고 시스템과 상호작용 한다. 이때, 인벤토리 모듈을 마이크로 서비스로 리팩토링 하여 서비스의 가용성 목표를 충족시킬 수 있다. 창고 시스템의 불안정성을 설명하기 위하여 불필요한 중복을 더할 수 있다? 우리는 또한 인벤토리를 레디스에 캐시해 두는것과 같이 항상 정합성을 유지하기 위한 메커니즘을 도입할 수도 있다.
+![image4](https://content.cdntwrk.com/files/aHViPTYzOTc1JmNtZD1pdGVtZWRpdG9yaW1hZ2UmZmlsZW5hbWU9aXRlbWVkaXRvcmltYWdlXzVhNjEzZGIyMGZhN2YucG5nJnZlcnNpb249MDAwMCZzaWc9NGNiNmVkZjc1MmZmY2FmMmJiYWMwODc2YzM2N2Q3MGI%253D)
