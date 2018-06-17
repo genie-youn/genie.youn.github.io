@@ -5,7 +5,10 @@ date: 2018-06-09 00:02:05 +0900
 tag: Article
 ---
 
-Pivotal의 블로그에 작성된 아티클을 옮깁니다. 원문 : https://content.pivotal.io/blog/should-that-be-a-microservice-keep-these-six-factors-in-mind
+Pivotal의 블로그에 작성된 아티클을 옮깁니다.
+
+원문 : [https://content.pivotal.io/blog/should-that-be-a-microservice-keep-these-six-factors-in-mind](https://content.pivotal.io/blog/should-that-be-a-microservice-keep-these-six-factors-in-mind)
+
 혹시 팀의 서비스를 마이크로서비스 아키텍처로 변경하기를 고민하고 있다면 도움이 될 글입니다.
 
 당신은 그 어느 때보다도 많은 코드를 쓰고 있다. 이 트릭은 무엇이 마이크로서비스가 되어야 하는지, 말아야 하는지 아는것이다.
@@ -17,7 +20,7 @@ Pivotal의 블로그에 작성된 아티클을 옮깁니다. 원문 : https://co
 
 마이크로 서비스 아키텍쳐를 사용했을때 얻을 수 있는 이점은 많다. 하지만 세상에 공짜는 없듯이, 마이크로 서비스의 도입은 복잡성을 증가시킨다. 그럼에도 개발팀은 마이크로 서비스가 가져다 주는 장점을 위해 그 복잡성을 기꺼이 받아들여야 한다.
 
-### 책임감있게 마이크로서비스를 사용해라.
+## 책임감있게 마이크로서비스를 사용해라.
 
 Matt Stine와 나는 요즘 고객들의 어플리케이션을 보면서 시간을 보냈다. 토론은 요즘 자주 들리는 "모든 시스템은 마이크로서비스로 되어야 한다." 에서 시작되었다. 사람들이 다양한 구현 세부 사항을 놓고 논쟁을 벌이는 가운데 대화는 중단되었다.
 
@@ -27,7 +30,7 @@ Matt Stine와 나는 요즘 고객들의 어플리케이션을 보면서 시간�
 
 다음 원칙 중 하나 이상에 대해 "예" 라고 대답하는 경우, 마이크로 서비스가 되기에 적합하다. 모든 원칙에 대하여 "아니요"라고 대답할 경우 시스템에 불필요한 복잡성을 도입할 뿐일 가능성이 높을것이다.
 
-### 1. 많은 변경 빈도
+## 1. 많은 변경 빈도
 
 시스템의 일부가 다른 속도로 발전하거나, 다른 방향으로 발전해야 하는가? 그렇다면 그 부분을 마이크로 서비스로 변경해라. 마이크로 서비스는 각각의 컴포넌트들이 독립적인 라이프 사이클을 가지게 할 수 있다.
 
@@ -39,7 +42,7 @@ Matt Stine와 나는 요즘 고객들의 어플리케이션을 보면서 시간�
 
 ![image2](https://content.cdntwrk.com/files/aHViPTYzOTc1JmNtZD1pdGVtZWRpdG9yaW1hZ2UmZmlsZW5hbWU9aXRlbWVkaXRvcmltYWdlXzVhNjEzZDcxMTcxMWQucG5nJnZlcnNpb249MDAwMCZzaWc9MDA0NGNjYWFhMTU1Yzc4NDBhMGY3YzNjNzI5NDM1YmE%253D)
 
-### 2. 독립적인 라이프사이클
+## 2. 독립적인 라이프사이클
 
 모듈이 완전히 독립적인 라이프 사이클(코드를 커밋하는 순간부터 프로덕트에 반영되기 까지의 흐름)을 가져야 하는 경우에는 마이크로서비스여야 한다. 이를위해 자체 코드 저장소와, CI/CD 파이프라인등을 갖추고 있어야 한다. 범위가 작으면 마이크로 서비스를 테스트 하는 것이 훨씬 쉬워진다.
 
@@ -53,7 +56,7 @@ Matt Stine와 나는 요즘 고객들의 어플리케이션을 보면서 시간�
 
 ![image3](https://content.cdntwrk.com/files/aHViPTYzOTc1JmNtZD1pdGVtZWRpdG9yaW1hZ2UmZmlsZW5hbWU9aXRlbWVkaXRvcmltYWdlXzVhNjEzZDhjOGMwMDkucG5nJnZlcnNpb249MDAwMCZzaWc9MjMzNzk3ZDQ0ZWMxMDAzMmZlMDgwZGY3YjZlM2E1OTI%253D)
 
-### 3. 독립적인 확장성(Scalability)
+## 3. 독립적인 확장성(Scalability)
 
 시스템의 일부분이 부하나 처리량이 다를 경우, 스케일링에 있어 요구사항이 다를 수 있는데 이 부분을 마이크로 서비스로 분리하여 해결할 수 있다.
 
@@ -64,7 +67,7 @@ Matt Stine와 나는 요즘 고객들의 어플리케이션을 보면서 시간�
 만약 주문 처리 기능을 마이크로 서비스로 리팩토링한다면 필요에 따라 다음과 가이 확장할 수 있게 된다.
 ![image3](https://content.cdntwrk.com/files/aHViPTYzOTc1JmNtZD1pdGVtZWRpdG9yaW1hZ2UmZmlsZW5hbWU9aXRlbWVkaXRvcmltYWdlXzVhNjEzZGEwYTg1MjcucG5nJnZlcnNpb249MDAwMCZzaWc9MzkyOWE1ZGM2OWZlMjA3MWE5NmQ4YTJjOWE3ZTdiZjM%253D)
 
-### 4. 장애의 고립
+## 4. 장애의 고립
 
 때로는 특정 타입의 장애로부터 앱을 격리시키고자 한다. 예를들어 의존하고 있는 외부 서비스가 가용성 목표를 충족하지 못할 때 어떤 일이 발생될까? 우리는 그 의존성을 나머지 시스템들과 분리하기 위해 마이크로 서비스를 만들어 그 서비스에 적절한 페일오버 메커니즘을 구축 할 수 있다
 
@@ -72,7 +75,7 @@ Matt Stine와 나는 요즘 고객들의 어플리케이션을 보면서 시간�
 
 ![image4](https://content.cdntwrk.com/files/aHViPTYzOTc1JmNtZD1pdGVtZWRpdG9yaW1hZ2UmZmlsZW5hbWU9aXRlbWVkaXRvcmltYWdlXzVhNjEzZGIyMGZhN2YucG5nJnZlcnNpb249MDAwMCZzaWc9NGNiNmVkZjc1MmZmY2FmMmJiYWMwODc2YzM2N2Q3MGI%253D)
 
-### 5. 외부 종속성과의 인터랙션 단순화 (Facade 패턴)
+## 5. 외부 종속성과의 인터랙션 단순화 (Facade 패턴)
 
 이번 원칙은 앞서 얘기했던 `장애의 고립` 원칙과 비슷하다. 이 원칙은 외부의 의존성으로부터 시스템을 보호하는데 더 초점을 맞춘다. 마이크로서비스는 간접적인 계층으로 동작하여, 써드파티로부터 우리의 시스템을 격리시킬 수 있다.
 
@@ -80,11 +83,11 @@ Matt Stine와 나는 요즘 고객들의 어플리케이션을 보면서 시간�
 
 미래에 상황이 바뀌고 마이그레이션해야하는 경우 변경 사항은 더 큰 리팩토링이 아닌 추상화된 계층만 마이그레이션 하면 된다.
 
-### 6. 기술선택의 자유로움
+## 6. 기술선택의 자유로움
 
 마이크로서비스로 팀은 선호하는 기술 스택을 자유롭게 사용할 수 있다. 요구사항에 가장 적합한 기술 스택을 채택하거나, 개발자가 익숙하고 잘하는 스택을 자유롭게 채택할 수 있게 된다. 너무 다양한 개발스택은 오버헤드를 추가하고, 오히려 단일 개발스택보다 더 단점이 많을 수 있다.
 
-### 조직의 문화를 점검해라
+## 조직의 문화를 점검해라
 
 기술적인 이야기를 하다가 갑자기 왜 문화를 논하는지 궁금한가? 기술적인 결정이 하늘에서 갑자기 뚝 떨어지진 않는다. 그렇기 때문에 마이크로서비스의 멋진 세계로 뛰어들기 전에 당신의 조직을 한번 점검해봐라.
 
