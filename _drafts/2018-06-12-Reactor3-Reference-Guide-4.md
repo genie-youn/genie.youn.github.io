@@ -32,3 +32,77 @@ combination operators can either ignore the right hand-side emissions and return
 후자의 경우, 양쪽에서 배출된 값은 `Flux`로 변경된다. 예를들어 `Mono#then(Mono)`는 다른 `Mono`를 반환하는 반면에 `Mono#concatWith(Publisher)`는 `Flux`를 리턴한다.
 
 `Mono` 는 반환하는 값이 없이 오로지 완료의 의미를 갖는 비동기 작업(얘를들면 `Runnable` 같은)을 나타낼 수 있다는걸 명심해라.
+
+### 4.3 Flux와 Mono를 만들고 구독하는 가장 쉬운 방법
+
+`Flux`와 `Mono`를 시작하는 가장 쉬운 방법은 각각의 클래스에 정의된 수많은 팩토리 메소드를 사용하는 것이다.
+
+예를들어, `String` 으로부터 어떠한 시퀀스를 생성할 때, 문자열들을 열거하거나 컬랙션에 담아서 이로부터 Flux를 생성하는 방법이 있다.
+
+```java
+Flux<String> seq1 = Flux.just("foo", "bar", "foobar");
+
+List<String> iterable = Arrays.asList("foo", "bar", "foobar");
+Flux<String> seq2 = Flux.fromIterabble(iterable);
+```
+이 외에도 다른 팩토리 메소드도 있다.
+
+```java
+Mono<String> noData = Mono.empty();
+Mono<String> data = Mono.just("foo");
+Flux<Integer> numbersFromFiveToSeven = Flux.range(5, 3);
+```
+
+Flux나 Mono가 구독될때 Java 8의 람다를 사용한다. 다양한 콜백의 람다들을 조합할 수 있도록 다음과 같은 메소드 시그니처의 `.subscribe()` 메소드를 제공한다.
+
+```java
+// 시퀀스 구독을 실행
+subscribe()
+
+// 생산된 각각의 요소들을 제어
+subscribe(Consumer<? super T> consumer);
+
+// 요소들을 제어하고 예외에 반응
+subscribe(Consumer<? super T> consumer,
+          Consumer<? super Throwable> errorConsumer);
+
+// 요소들을 제어하고, 예외에 반응하며 시퀀스가 성공적으로 완료되었을때 무언가 액션을 수행
+subscribe(Consumer<? super T> consumer,
+          Consumer<? super Throwable> errorConsumer,
+          Runnable completeConsumer);
+
+// 요소들을 제어하고, 예외에 반응하며 시퀀스가 성공적으로 완료되었을때 무언가 액션을 수행할 뿐만 아니라, 이 구독으로 생산된걸 다시 구독(Subscription)
+subscribe(Consumer<? super T> consumer,
+          Consumer<? super Throwable> errorConsumer,
+          Runnable completeConsumer,
+          Consumer<? super Subscription> subscriptionConsumer);
+```
+
+### 4.3.1 `subscribe` 메소드 예제
+
+이번 세션은 `subscribe`의 다섯가지 메소드 시그니처에 대한 예제를 담고있다. 우선 인자가 없는 메소드의 기본적인 예제다.
+
+```java
+// 구독자가 땡겨갈때 3개의 값을 생산해내는 Flux를 준비한다.
+Flux<Integer> ints = Flux.range(1, 3);
+
+// 땡긴다.
+ints.subscribe();
+```
+
+앞선 코드는 눈에 보이는 출력은 없지만, `Flux`는 실제로 동작하며 세개의 값을 만들어낸다.
+만약 우리가 람다를 주입시켜 주면 우리는 눈에 보이는 결과를 만들 수 있다. 다음 예제는 생산한 값을 보여줄수 있도록 `subscribe` 메소드를 호출한다.
+
+```java
+Flux<Integer> ints = Flux.range(1,3);
+ints.subscribe(i -> System.out.println(i));
+```
+
+위 코드는 다음과 같은 출력을 만든다 :
+```
+1
+2
+3
+```
+
+다음 메소드 시그니처를 설명하기 위해, 우리는 임의로 예외를 발생시킬 것이다. 다음 예제를 보자.
