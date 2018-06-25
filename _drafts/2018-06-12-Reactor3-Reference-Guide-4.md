@@ -106,3 +106,40 @@ ints.subscribe(i -> System.out.println(i));
 ```
 
 다음 메소드 시그니처를 설명하기 위해, 우리는 임의로 예외를 발생시킬 것이다. 다음 예제를 보자.
+
+```java
+// 4개의 값을 갖는 Flux 를 만들자.
+Flux<Integer> ints = Flux.range(1,4)
+// 특정 값을 다르게 핸들링 하기 위해 map 메소드를 사용한다.
+  .map(i -> {
+    // 대부분의 값은 그대로 반환하지만
+    if (i <= 3) return i
+    // 4일경우 예외를 발생한다.
+    throw new RuntimeException("Got to 4");
+  });
+
+// 에러 핸들러와 함께 구독한다.
+ints.subscribe(i -> System.out.println(i),
+  error -> System.out.pringln("Error: " + error));
+```
+
+생산된 값을 구독하는 람다와, 예외가 발생했을때 이를 처리하는 람다, 총 두개의 람다로  `subscribe()` 를 작성했다. 출력은 다음과 같다.
+
+```
+1
+2
+3
+Error: java.lang.RuntimeException: Got to 4
+```
+
+`subscribe`의 다음 메소드 시그니처는 에러 핸들러와 완료 이벤트를 처리할 핸들러 두가지를 갖는 시그니처다. 다음 예제를 보자
+
+```java
+Flux<Integer> ints = Flux.range(1,4);
+ints.subscribe(i -> System.out.println(i),
+  error -> System.out.println("Error: " + error),
+  () -> {System.out.println("Done");}});
+```
+
+에러 신호와 완료 신호는 마지막 이벤트이면서 서로 상호 배타적이다. (동시에 존재할 수 없다)
+소비하는 작업을 완료시키기 위해 우리는 반드시 에러 신호를 발생시키지 않도록 주의해야한다.
