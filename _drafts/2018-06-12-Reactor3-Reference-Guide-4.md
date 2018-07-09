@@ -143,3 +143,48 @@ ints.subscribe(i -> System.out.println(i),
 
 에러 신호와 완료 신호는 마지막 이벤트이면서 서로 상호 배타적이다. (동시에 존재할 수 없다)
 소비하는 작업을 완료시키기 위해 우리는 반드시 에러 신호를 발생시키지 않도록 주의해야한다.
+
+완료 이벤트를 처리하는 핸들러는 `Runnable` 인터페이스의 파라밑터가 없는 `run` 메소드를 나타내기 때문에 비어있는 괄호의 람다로 표현된다.
+앞선 코드는 다음과 같은 출력을 갖는다.
+
+```
+1
+2
+3
+4
+Done
+```
+
+마지막 `subscribe`의 메소드 시그니처는 임의의 `Subscriber`를 포함한다. 해당 내용은 다음 섹션에서 자세히 설명한다.
+
+```java
+SampleSubscriber<Integer> ss = new SampleSubscriber<>();
+Flux<Integer> ints = Flux.range(1,4);
+ints.subscribe(i -> System.out.println(i),
+               error -> System.out.println("Error: " + error),
+               () -> {System.out.println("Done");},
+               s -> ss.request(100));
+ints.subscribe(ss);
+```
+
+앞선 예제에서 우리는 임의의 `Subscriber`를 메소드의 마지막 인자로 넘겨주었다. 다음 예제에서 인자로 넘겨주었던 `Subscriber`의 가장 간단한 구현체를 보자.
+
+```java
+package io.projectreactor.samples;
+import org.reactivestreams.Subscription;
+import reactor.core.publisher.BaseSubscriber;
+
+public class SampleSubscriber<T> extends BaseSubscriber<T> {
+  public void hookOnSubscriber(Subscription subscription) {
+    System.out.println("Subscribed");
+    request(1);
+  }
+
+  public void hookOnNext(T value) {
+    System.out.println(value);
+    request(1);
+  }
+}
+
+
+```
