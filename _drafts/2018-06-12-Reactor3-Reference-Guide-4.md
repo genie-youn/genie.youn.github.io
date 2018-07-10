@@ -185,6 +185,31 @@ public class SampleSubscriber<T> extends BaseSubscriber<T> {
     request(1);
   }
 }
-
-
 ```
+
+SampleSubscriber 클래스는 `BaseSubscriber` 클래스를 상속받고 있는데, 이 클래스는 Reactor 에서 사용자가 `Subscriber`를 정의할 때 권장하는 추상클래스이다.
+이 클래스는 Subscriber의 행위를 조정할 수 있는 오버라이드 가능한 훅(hook)을 제공한다. 기본적으로 이 훅은 제한이 없는 요청을 발생시키고 `subscribe()` 메소드와 같이 동작한다.
+그러나 `BaseSubscriber`를 상속받으면 임의로 요청의 양을 조절하는데 유용하다.
+
+최소한 `hookOnSubscribe(Subscription subscription)` 과 `hookOnNext(T value)`는 구현해야 한다. 이 예제에서 `hookOnSubscribe` 메소드는 문자열을 출력하고, 첫번째 요청을 만들어낸다. 그런후 `hookOnNext` 메소드는 현재의 값을 출력하고 다음 요청을 만들어낸다.
+
+`SimpleSubscriber` 클래스는 다음과 같은 출력을 만든다.
+```
+Subscribed
+1
+2
+3
+4
+```
+> `hookOnError`, `hookOnCancel`,`hookOnComplete`, `hookFinally` 메소드 또한 구현할 수 있다.
+
+Reactive Streams 스펙은 또 다른 형태의 `subscribe` 메소드를 정의한다. 다음과 같이 임의의 Subscriber를 별다른 옵션 없이 받는다.
+
+```Java
+subscribe(Subscriber<? super T> subscriber);
+```
+
+이러한 형태의 subscribe 메소드는 이미 유용한 `Subscriber`를 가지고 있을때 편리하다.
+하지만 그것보다 더 이 메소드는 다른 콜백과 관련된 구독 작업을 하기위해 필요하다. 아마도 당신은 backpressure를 처리하고 스스로 요청을 실행해야하기 때문이다.
+
+이 상황에서, backpressure를 핸들링하기 위한 유용한 메소드를 제공하는 `BaseSubscriber` 추상 클래스를 사용한다면, 쉽게 문제를 해결할 수 있다.
