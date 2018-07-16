@@ -15,7 +15,7 @@ tag: Reactor
 
 작업의 관계 수를 변경하는 연산자는 타입 또한 변경한다. 예를들어 `Flux`의 `count`연산자는 `Mono<Long>`을 반환한다.
 
-### 4.1 0-N개 요소의 비동기 시퀀스 Flux
+## 4.1 0-N개 요소의 비동기 시퀀스 Flux
 
 `Flux<T>`는 0부터 N개의 방출된 요소의 비동기 시퀀스를 나타내고, 완료 신호와 에러로 인해 종료될 수 있는 표준 `Publisher<T>` 이다. 그러므로, `Flux`가 가질 수 있는 값은 값과 완료신호와 에러이다. Reactive Streams 스펙에서 이러한 세가지 신호의 타입은 downstream 객체의 `onNext`, `onComplete`, `onError`를 호출한다.
 
@@ -23,7 +23,7 @@ tag: Reactor
 `onComplete` 이벤트가 존재하는데  `onNext`가 없다는건 비어있는 유한한 시퀀스를 의미한다. 이 시퀀스에 `onComplete` 를 지운다면 비어있는 무한한 시퀀스를 의미하게 된다. 비슷하게 무한한 시퀀스가 꼭 비어있을 필요는 없다. 예를들어 `Flux.interval(Duration)` 은 무한하고 주기적으로 Long의 값을 배출하는 `Flux<Long>`를 만들어낸다.
 
 
-### 4.2 0 혹은 1개의 비동기 결과를 갖는 Mono
+## 4.2 0 혹은 1개의 비동기 결과를 갖는 Mono
 
 `Mono<T>` 는 보통 한개의 요소를 갖고, `onComplete` 나 `onError`로 종료될 수 있는 특별한 `Publisher<T>` 이다.
 
@@ -33,7 +33,7 @@ combination operators can either ignore the right hand-side emissions and return
 
 `Mono` 는 반환하는 값이 없이 오로지 완료의 의미를 갖는 비동기 작업(얘를들면 `Runnable` 같은)을 나타낼 수 있다는걸 명심해라.
 
-### 4.3 Flux와 Mono를 만들고 구독하는 가장 쉬운 방법
+## 4.3 Flux와 Mono를 만들고 구독하는 가장 쉬운 방법
 
 `Flux`와 `Mono`를 시작하는 가장 쉬운 방법은 각각의 클래스에 정의된 수많은 팩토리 메소드를 사용하는 것이다.
 
@@ -213,3 +213,34 @@ subscribe(Subscriber<? super T> subscriber);
 하지만 그것보다 더 이 메소드는 다른 콜백과 관련된 구독 작업을 하기위해 필요하다. 아마도 당신은 backpressure를 처리하고 스스로 요청을 실행해야하기 때문이다.
 
 이 상황에서, backpressure를 핸들링하기 위한 유용한 메소드를 제공하는 `BaseSubscriber` 추상 클래스를 사용한다면, 쉽게 문제를 해결할 수 있다.
+
+**backpressure를 조정하기 위한 BaseSubscriber의 사용**
+```java
+Flux<String> source = someStringSource();
+
+source.map(String::toUpperCase)
+      .subscribe(new BaseSubscriber<String> () {
+        @Override
+        protected void hookOnSubscribe(Subscription subscription) {
+          request(1);
+        }
+
+        @Override
+        protected void hookOnNext(String value) {
+          request(1);
+        }
+      });
+```
+
+## 4.4 프로그램으로 시퀀스 만들기
+
+이번 섹션에서는 `onNext`, `onError`, `onComplete`를 프로그램적으로 정의하여 `Flux`와 `Mono`를 생성하는 방법을 소개한다.
+이러한 메소드들은 우리가 `sink`라고 부르는 이벤트를 발생시키기 위한 API를 공통적으로 갖고 있다. 몇가지 형태의 메소드를 알아보자.
+
+
+### 4.4.1 생성
+
+프로그램적으로 `Flux`를 생성하는 가장 쉬운 방법은 생성 함수를 받는 `generate` 메소드를 사용하는 것이다.
+
+이 메소드는 `synchronous` 처리방식과 `one-by-one` 방출, 즉 `SynchronousSink` 와 한번의 콜백에 한번의 `next()` 메소드가 호출되는것을 의미한다.
+또한 부가적으로 `error(Throwable)` 과 `complete()` 메소드를 호출 할 수 있다.
