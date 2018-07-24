@@ -287,3 +287,39 @@ Flux<String> flux = Flux.generate(
 ```
 
 ### 4.4.2 생성 (Create)
+
+`Flux`의 좀 더 프로그램틱한 생성방법은 `create` 메소드를 사용하는 것이다. 이 메소드는 비동기/동기 모두 가능하고, 한번에 여러 값을 방출하는데 적합하다.
+이 메소드는 `next`, `error`, `complete` 메소드를 갖는 `FluxSink` 를 사용하는데, `generate` 와는 대조적으로 상태 기반의 변수를 갖지 않는다. 이는 콜백에서 여러
+이벤트를 트리거 할 수 있다는 것을 의미한다 (심지어 다른 스레드에서도) (?)
+
+> 또한 `create` 메소드는 기존의 API를 reactive 하게 바꾸는데 유용합니다.
+
+리스너 기반의 API가 있다고 가정해보자. 이 API는 데이터를 묶음으로 처리하면서 두개의 이벤트를 갖고 있는데, 하나는 데이터의 묶음이 준비되었다는 이벤틑와, 처리가 완료 되었다는 이벤ㅌ트이다.
+
+```java
+interface MyEventListener<T> {
+  void onDataChunk(List<T> chunk);
+  void processComplete();
+}
+```
+
+이때 `create` 메소드를 사용해서 `Flux<T>` 로 바꿀 수 있다.
+```java
+Flux<String> bridge = Flux.create(sink -> {
+  myEventProcessor.register(
+    new MyEventListener<String>() {
+      public void onDataChunk(List<String> chunk) {
+        for (String s : chunk) {
+          sink.next(s);
+        }
+      }
+
+      public void processComplete() {
+        sink.complete();
+      }
+    }
+  );
+});
+```
+
+또한 `create` 는 비동기로 동작하고, `OverflowStrategy`를 재 정의 하여 역압이 어떻게 동작할지를 관리할 수 있다.
