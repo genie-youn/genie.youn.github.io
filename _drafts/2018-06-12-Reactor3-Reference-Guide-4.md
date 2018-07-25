@@ -323,3 +323,40 @@ Flux<String> bridge = Flux.create(sink -> {
 ```
 
 또한 `create` 는 비동기로 동작하고, `OverflowStrategy`를 재 정의 하여 역압이 어떻게 동작할지를 관리할 수 있다.
+
+* `IGNORE` 는 다운스트림의 역압 요청을 완전히 무시한다. 그래서 다운스트림의 대기열 큐가 가득 차게되면 `IllegalStateException`을 발생한다.
+* `ERROR` 는 다운스트림을 더 이상 유지할 수 없을 때 `IllegalStateException`을 발생한다.
+* `DROP` 은 다운스트림이 준비되지 않았으면 업스트림으로 부터의 신호를 버린다.
+* `LATEST` 는 업스트림의 마지막 신호만을 다운스트림에 전달한다.
+* `BUFFER` 는 기본값으로 다운스트림이 유지되지 않으면 모든 신호를 버퍼에 둔다. (버퍼의 제한이 없으므로 `OutOfMemoryError`로 이어질수있다.)
+
+> `Mono` 에도 `create` 메소드가 존재한다. 이 메소드의 `MonoSink`는 다중값의 배출이 가능하지 않기에 첫번째 신호 이후의 것들은 전부 버려진다.
+
+##### Push 모델
+
+하나의 생산자에서 생기는 이벤트를 처리하는데 적합한 `create`의 형태는 `push`이다. `create`와 비슷하게 `push` 또한 비동기로 실행되고 `create`에 지원되는 전략들을 사용해
+역압을 관리할 수 있다. 오로지 하나의 생산자 스레드만이 `next`, `complete`, `error` 메소드를 호출할 수 있다.
+
+```java
+Flux<String> bridge = Flux.push(sink -> {
+  myEventProcessor.register(
+    new SingleThreadEventListener<String>() {
+
+      public void onDataChunk(List<String> chunk) {
+        for (String s : chunk) {
+          sink.next(s);
+        }
+      }
+
+      public void processComplete() {
+        sink.complete();
+      }
+
+      public void processError(Throwable e) {
+        sink.error(e);
+      }      
+    });
+});
+```
+
+##### Hybrid push/pull 모델
