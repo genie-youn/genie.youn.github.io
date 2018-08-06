@@ -178,3 +178,20 @@ Flux<String> bridge = Flux.create(sink -> {
 
 `handle` 메소드는 조금 다르다. `Mono` 와 `Flux` 전부 사용할 수 있고, 인스턴스 메소드이기 때문에 이미 존재하는 소스에 체이닝 되어 사용될 수 있다. (다른 연산자들 처럼)
 
+`handle` 메소드는 `SynchronousSink` 를 사용하고 오로지 1-1 방출만 가능하다는 점에서 `generate` 메소드와 비슷하지만 각 소스 요소에서 임의의 값을 생성하는데 사용될 수 있으며, 일부는 건너 뛸 수 있다. 이런 방법으로 `map` 과 `filter`의 조합으로 제공할 수 있다. 메소드의 시그니처는 다음과 같다.
+
+`handle(BiConsumer<T, SynchronousSink<R>>)`
+
+예제를 보도록 하자. Reactive streams의 명세는 시퀀스 내에 `null` 값을 허용하질 않는다. 만약 기존에 존재하는 맵핑 함수를 사용하여 `map` 메소드를 수행하고 싶을때 이 메소드가 종종 `null`을 리턴한다면 어떻게 해야할까?
+
+예를 들어 다음 메소드는 정수형 소스에 안전하게 적용될 수 있다.
+
+```java
+public String alphabet(int letterNumber) {
+  if (letterNumber < 1 || letterNumber > 26) {
+    return null;
+  }
+  int letterIndexAscii = 'A' + letterNumber - 1;
+  return "" + (char) letterIndexAscii;
+}
+```
