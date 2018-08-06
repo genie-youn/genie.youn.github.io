@@ -163,4 +163,18 @@ Flux<String> bridge = Flux.create(sink -> {
 
 ##### Cleaning up
 
-두가지 콜백 `onDispose` 과 `onCancel` 은 사용한 리소스의 정리나, 종료나, 제거를 수행한다. `onDispose` 메소드는 `Flux` 가 완료되거나, 에러가 뱉어지거나, 취소되었을 때 정리하는 로직을 수행하는데 사용될 수 있다. 
+두가지 콜백 `onDispose` 과 `onCancel` 은 사용한 리소스의 정리나, 종료나, 제거를 수행한다. `onDispose` 메소드는 `Flux` 가 완료되거나, 에러가 뱉어지거나, 취소되었을 때 정리하는 로직을 수행하는데 사용될 수 있다.
+
+`onCancel` 메소드는 `onDispose` 메소드를 통해 정리하기 전에 취소와 관련된 특정 액션을 수행할 수 있다.
+
+```java
+Flux<String> bridge = Flux.create(sink -> {
+  sink.onRequest(n -> channel.poll(n))
+      .onCancel(() -> channel.cancel()) // cancel 신호에 의해서만 실행
+      .onDispose(() -> channel.close()) // complete, error, cancel 전부 실행
+});
+```
+### 4.4.3 Handle
+
+`handle` 메소드는 조금 다르다. `Mono` 와 `Flux` 전부 사용할 수 있고, 인스턴스 메소드이기 때문에 이미 존재하는 소스에 체이닝 되어 사용될 수 있다. (다른 연산자들 처럼)
+
