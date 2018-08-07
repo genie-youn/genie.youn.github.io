@@ -195,3 +195,25 @@ public String alphabet(int letterNumber) {
   return "" + (char) letterIndexAscii;
 }
 ```
+우리는 `handle` 메소드를 모든 null 값을 징는데 사용할 수 있다.
+
+```java
+Flux<String> alphabet = Flux.just(-1, 30, 13, 9, 20)
+  .handle((i, sink) -> {
+    String letter = alphabet(i);
+    if (letter != null) sink.next(letter);
+  });
+
+  alphabet.subscribe(System.out::println);
+```
+
+## 4.5 Schedulers
+
+RxJava와 마찬가지로 Reactor 또한 동시성에 대해 잘 모르더라도 동시성 처리를 가능케 하는 도구~concurrency agnostic~ 로 고려될 수 있다.
+
+that is, it dose not enforce a concurrency model. Rather it leaves you, the developer, in command. However, that does not prevent library from helping you with concurrency ..?
+
+Reactor 에서 실행 모델과 어디서 실행될지는 `Scheduler` 에 의해서 결정된다.
+[Scheduler](http://projectreactor.io/docs/core/release/api/reactor/core/scheduler/Scheduler.html) 는 추상화된 인터페이스이고, [Schedulers](http://projectreactor.io/docs/core/release/api/reactor/core/scheduler/Schedulers.html) 클래스는 아래 실행 컨택스트에 대한 접근에 관련된 메소드를 제공한다.
+
+> 이둘의 차이??
