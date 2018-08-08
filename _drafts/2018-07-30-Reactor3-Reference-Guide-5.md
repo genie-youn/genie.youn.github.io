@@ -217,3 +217,16 @@ Reactor 에서 실행 모델과 어디서 실행될지는 `Scheduler` 에 의해
 [Scheduler](http://projectreactor.io/docs/core/release/api/reactor/core/scheduler/Scheduler.html) 는 추상화된 인터페이스이고, [Schedulers](http://projectreactor.io/docs/core/release/api/reactor/core/scheduler/Schedulers.html) 클래스는 아래 실행 컨택스트에 대한 접근에 관련된 메소드를 제공한다.
 
 > 이둘의 차이??
+
+* 현재 스레드에서 실행 (`Schedulers.immediate()`).
+* 재사용 가능한 싱글스레드에서 실행 (`Schedulers.single()`). 이 메소드는 모든 실행 호출자들이 하나만의 스레드를 해당 스레드가 종료될때까지 재사용한다는걸 명심해라. 만약 각각의 실행 호출자들마다 새로운 싱글스레드에서 실행되길 원한다면 `Schedulers.newSingle()` 메소드를 사용할 것.
+* elastic 스레드 풀 (`Schedulers.elastic()`). 이 메소드는 필요하다면 새로운 워커 스레드를 생성하거나 유휴 스레드가 존재한다면 그 스레드를 재활용한다. 스레드가 너무 오랫동안 유 상태에 있다면 (기본 60초) 해당 스레드는 종료된다. 인스턴스의 I/O 블럭킹 작업을 처리하는데 유용하다. `Schedulers.elastic()` 메소드는 블록킹 작업을 별개의 스레드를 할당하여 다른 리소스를 이 작업에 얽매이지 않도록 손쉽게 만들 수 있다.
+* 병렬처리를 위한 고정된 스레드풀을 사용 (`Schedulers.parallel()`) 이 메소드는 CPU 코어의 갯수만큼 워커 스레드를 생성한다.
+
+> 레거시 블록킹 코드를 피할 수 없다면, `elastic` 은 해결책이 될 수 있지만 `single` 이나 `parallel`은 그럴 수 없다. 결론만 얘기하자면, 리액터의 블록킹 API들은 (`block()`, `blockFirst()`, `blockList()`, `toIterable()`, `toStream()`) 기본 single 이나 기본 parallel 스케줄러 에서 실행될 경우 `IllegalStateException` 을 던지게 되어있다.
+> 사용자 정의 스케줄러는 `NonBlocking` 마커 인터페이스를 구현하는 스레드 인스턴스를 생성하는 방법으로 "논 블럭킹만 가능" 하다는 표현을 할 수 있다.
+
+추가로, `Schedulers.fromExecutorService(ExecutorService)` 메소드를 사용하여 이미 존재하는 `ExecutorService` 로 부터 스케줄러를 생성할 수 있다.
+또한 위의 여러 종류의 스케줄러를 `newXXX` 메소드를 사용하여 새로운 스케줄러를 생성할 수 있다. 예를들어 `Schedulers.newElastic(yourScheduleName)` 은 yourScheduleName 라는 이름을 갖는 새로운 elastic 스케줄러를 만든다.
+
+> 논 블럭킹 알고리즘을 사용하여 구현된 연산자는 일부 스케줄러에서 진행죽인 작업을 훔치도록 조정한다.
