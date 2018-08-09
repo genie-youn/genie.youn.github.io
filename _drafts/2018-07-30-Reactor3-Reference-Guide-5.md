@@ -230,3 +230,13 @@ Reactor 에서 실행 모델과 어디서 실행될지는 `Scheduler` 에 의해
 또한 위의 여러 종류의 스케줄러를 `newXXX` 메소드를 사용하여 새로운 스케줄러를 생성할 수 있다. 예를들어 `Schedulers.newElastic(yourScheduleName)` 은 yourScheduleName 라는 이름을 갖는 새로운 elastic 스케줄러를 만든다.
 
 > 논 블럭킹 알고리즘을 사용하여 구현된 연산자는 일부 스케줄러에서 진행죽인 작업을 훔치도록 조정한다.
+
+몇몇 연산자는 기본적으로 `Schedulers`의 특정한 스케줄러를 사용하고 일반적으로는 사용자에게 다른 스케줄러를 사용할 수 있는 선택지를 준다.
+예를들어 `Flux.interval(Duration.ofMillis(300))` 은 매 300ms 마다 값을 생산하는 `Flux<Long>` 를 만든다. 이 `Flux`는 기본적으로 `Schedulers.parallel()` 에서 생성되는데 다음과 같이 새로운 싱글 스레드 인스턴스를 가지고 생성하도록 바꿀 수 있다.
+
+```java
+Flux.interval(Duration.ofMillis(300), Schedulers.newSingle("test"));
+```
+
+리액터는 리액티브 체인에서 실행 컨텍스트 (혹은 스케줄러) 를 변경할 수 있는 `publishOn`, `subscribeOn` 두가지 수단을 제공한다.
+둘다 `Scheduler` 를 인자로 받아 실행 컨텍스트를 해당 스케줄러로 변경해주지만, `publishOn` 은 메소드가 호출되는 지점 (라인) 이 중요한 반면에 `subscribeOn` 은 그렇지 않다. 이 둘의 차이를 이해하기 위해서는 우선 [구독하기 전에는 아무것도 일어나지 않는다는 것을 기억해야한다.](http://projectreactor.io/docs/core/release/reference/#reactive.subscribe)
