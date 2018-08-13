@@ -240,3 +240,15 @@ Flux.interval(Duration.ofMillis(300), Schedulers.newSingle("test"));
 
 리액터는 리액티브 체인에서 실행 컨텍스트 (혹은 스케줄러) 를 변경할 수 있는 `publishOn`, `subscribeOn` 두가지 수단을 제공한다.
 둘다 `Scheduler` 를 인자로 받아 실행 컨텍스트를 해당 스케줄러로 변경해주지만, `publishOn` 은 메소드가 호출되는 지점 (라인) 이 중요한 반면에 `subscribeOn` 은 그렇지 않다. 이 둘의 차이를 이해하기 위해서는 우선 [구독하기 전에는 아무것도 일어나지 않는다는 것을 기억해야한다.](http://projectreactor.io/docs/core/release/reference/#reactive.subscribe)
+
+리액터에서 연산자를 체이닝할때, 필요한 만큼 `Flux` 와 `Mono`의 구현체로 연산자 서로의 내부를 감쌀 수 있다 (?) 구독을 시작하면 체인의 `Subscriber` 객체가 생성되어 역으로 (체인의 맨 위로) 전달된다. 이것은 효과적으로 사용자로부터 감추어져있다. 사용자가 볼 수 있는 것은 `Flux` 혹은  `Mono` 와 `Subscription` 의 외부 계층이지만 이런 중간 연산자 구독자들은 실제로 작업이 일어나는 곳이다. (???)
+
+ 이러한 사전 지식을 통해 우리는 `publishOn` 과 `subscribeOn` 을 좀 더 자세히 볼 수 있다.
+
+ * `publishOn` 은 구독 연산자들의 체인 중간에 다른 연산자들 처럼 적용한다. 이 연산자는 상위 스트림으로 부터 신호를 받아 주입받은 `Scheduler` 의 워커에서 콜백을 실행한다. 결론적으로 이 연산자는 이후의 연산자들의 실행에 영향을 끼친다 (이후 체인에 다른 `publishOn` 메소드를 만날 때 까지)
+
+ * `subscribe` 은 구독 프로세스에 적용되어, 연산자 체인이 생성되는 시점까지 역으로 전달된다. 즉 어디에 `subscribeOn` 메소드를 명시하든 이 메소드는 항상 소스 방출의 전체적인 실행환경에 영향을 끼친다. 그러나 이 메소드는 이후 시퀀스가 동작하는 중 `publishOn` 메소드의 호출에 영향을 끼치지 못한다. `publishOn` 가 호출되면 이후의 실행환경은 `publishOn` 메소드에 의해 변경되어 수행된다.
+
+ > 오로지 가장먼저 호출된 `subscribeOn` 만이 전체적인 실행환경에 영향을 끼친다.
+
+## 4.6 Threading
