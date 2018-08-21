@@ -52,3 +52,29 @@ try-catch 블럭에서 예외를 처리하는 몇가지 방법을 알고있을 �
 6. `finally` 블럭을 사용하여 사용하던 리소스를 정리하거나 자바 7의 `try-with-resource` 구조를 사용한다.
 
 이 모든 방법이 리액터에서는 에러 핸들링 연산자로 구현되어 있다.
+
+이러한 연산자들을 알아보기 전에, 우선 리액티브 체인과 try-catch 구문을 비교해보자.
+구독시에 체인의 가장 마지막에 위치한 `onError` 콜백은 `catch` 블럭과 흡사하다.
+
+```java
+Flux<String> s = Flux.range(1, 10)
+  .map(v -> doSomethingDangerous(v)) // 예외가 발생할 수 있는 변환
+  .map(v -> doSecondTransform(v)); // 위에서 예외가 발생된다면 실행되지 않는다.
+
+s.subscribe(value -> System.out.println("RECEIVED : " + value), // 예외가 발생하지 않는다면 (성공한다면) 출력
+            error -> System.err.println("CAUGHT : " + error)) // 예외가 발생하면 에러메세지 출력
+```
+
+이 예제는 다음 try-catch 구문과 비슷하다.
+
+```java
+try {
+  for (int i = 1; i < 11; i++) {
+    String v1 = doSomethingDangerous(i);
+    String v2 = doSecondTransform(v1);
+    System.out.println("RECEIVED : " + v2);
+  }
+} catch (Throwable t) {
+  System.err.println("CAUGHT : " + t);
+}
+```
