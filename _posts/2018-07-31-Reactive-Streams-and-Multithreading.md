@@ -89,3 +89,61 @@ System.out.println("Before or after?");
 ```
 
 여기서 우리는 기초 데이터 스트림의 연산자가 메인 스레드에서 수행되는걸 볼 수 있습니다. 이제 `publishOn` 메소드를 기초 데이터 스트림 이후에 추가하고 코드를 수행해보겠습니다.
+
+```java
+source = Flux.<Integer>create(emitter -> {
+    System.out.println(Thread.currentThread().getName());
+    emitter.next(1);
+    emitter.complete();
+});
+
+source.publishOn(Schedulers.single());
+
+source
+   .map(i -> i + ". element: " + i)
+   .subscribe(System.out::println);
+
+System.out.println("Before or after?");
+
+//Output:
+// main
+// Before or after?
+// 1. element: 1
+```
+
+처음은 이전 예제와 완전히 똑같지만, `publishOn` 메소드는 이후에 실행되는 모든 연산자를 다른 스레드에서 실행되게끔 보장합니다.
+그래서 마지막 출력문이 먼저 찍히게 되죠.
+
+이제 구독전에 `subscribeOn` 메소드를 추가해서 어떻게 다르게 동작하는지 확인해봅시다.
+
+```java
+source = Flux.<Integer>create(emitter -> {
+    System.out.println(Thread.currentThread().getName());
+    emitter.next(1);
+    emitter.complete();
+});
+
+source.publishOn(Schedulers.single());
+
+source
+   .map(i -> i + ". element: " + i)
+   .subscribeOn(Schedulers.single())
+   .subscribe(System.out::println);
+
+System.out.println("Before or after?");
+
+// Output:
+// Before or after?
+// single-1
+// 1. element: 1
+```
+
+As we can see from the output even the subscription process now runs on another thread.
+출력에서 볼 수 있드시 구독의 모든 프로세스가 다른 스레드에서 수행됩니다. (값을 만들어내는 과정까지)
+이제 우리는 실제로 비동기적이고, 논블럭킹으로 스트림을 동작하게 할 수 있습니다.
+
+# Conclusion
+
+리액티브 스트림이 항상 비동기로 동작하는건 아닙니다.
+스레딩관련 처리는 기초 데이터 소스에 따라 다르며, 연산자에도 영향을 받을 수 있습니다.
+리액티브 스트림의 장점은 같은 코드 스타일을 유지하면서도 비동기/논블럭킹의 개발을 할 수 있다는 것입니다. 우리는 동일한 프로그래밍 모델과 동일한 파이프라인을 동기적으로 실행되는 스트림에도, 비동기적으로 동작하는 스트림에도 사용할 수 있습니다.
