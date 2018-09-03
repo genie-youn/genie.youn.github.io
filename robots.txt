@@ -1,0 +1,2 @@
+User-agent: *
+Sitemap: http://genie-youn.github.io/sitemap.xml
